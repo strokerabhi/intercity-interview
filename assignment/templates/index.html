@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabular Data</title>
+</head>
+<style>
+    .highlight {
+        color: green;
+    }
+</style>
+<body>
+    <ul>
+        <li class="highlight">Note: I assume vehicle_type_id 3 is bike</li>
+    </ul>
+    {% if num_bikes %}
+        <p>Number of bikes/cars in the system: {{ num_bikes }}</p>
+    {% endif %}
+
+    
+    <h3>Metrics:</h3>
+    <ul>
+        <li>Number of bikes currently: {{ num_current_bikes }}</li>
+        <li>Number of disabled bikes: {{ num_disabled_bikes }}</li>
+        <li>Number of reserved bikes: {{ num_reserved_bikes }}</li>
+        <li>Average range: <span id="avg_range">{{ avg_range }}</span></li>
+        <li>
+            <button onclick="refreshData()">Refresh Data of avarge</button>
+            <button onclick="refreshAllData()">Refresh All Data</button>
+        </li>
+    </ul>
+
+    <h1>Tabular Data</h1>
+    
+    {% if tabular_data %}
+        {{ tabular_data|safe }}
+    {% else %}
+        <p>No data available</p>
+    {% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function refreshData() {
+            $.ajax({
+                url: '/refresh_data/',
+                type: 'GET',
+                success: function(data) {
+                    $('#avg_range').text(data.avg_range);
+                },
+                error: function(error) {
+                    console.error('Error refreshing data:', error);
+                }
+            });
+        }
+
+        function refreshAllData() {
+            location.reload(true);
+        }
+    </script>
+</body>
+</html>
